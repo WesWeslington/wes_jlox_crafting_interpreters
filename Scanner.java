@@ -46,10 +46,10 @@ class Scanner
         while(!isAtEnd())
         {
             start = current;
-            scanToken();
+            scanToken(); // We add tokens as we scan them here
         }
 
-        tokens.add(new Token(TokenType.EOF, "", null, line));
+        tokens.add(new Token(TokenType.EOF, "", null, line)); // TODO: Can this be replaced with addToken? (Let's revisit this later)
         return tokens;
     }
 
@@ -74,6 +74,7 @@ class Scanner
             case '<': addToken(match('=') ? TokenType.LESS_EQUAL: TokenType.LESS); break;
             case '>': addToken(match('=') ? TokenType.GREATER_EQUAL: TokenType.GREATER); break;
 
+            case '/': comment(); break;
             case ' ':
             case '\r':
             case '\t':
@@ -116,6 +117,25 @@ class Scanner
         return isAlpha(c) || isDigit(c);
     }
 
+    private void comment()
+    {
+        if(match('/'))
+        {
+            while(peek() != '\n' && !isAtEnd())
+            {
+                advance();
+            }
+        }else if(match('*'))
+        {
+            char lastPeek = '\0';
+            while(lastPeek != '*' && peek() != '/' && !isAtEnd())
+            {
+                lastPeek = peek();
+                advance();
+            }
+        }
+    }
+
     private void string()
     {
         while(peek() != '"' && !isAtEnd())
@@ -132,7 +152,7 @@ class Scanner
 
         advance();
 
-        // trim the surrounding quotes
+        // Trim the surrounding quotes
         String value = source.substring(start + 1, current - 1);
         addToken(TokenType.STRING, value);
     }
@@ -185,5 +205,6 @@ class Scanner
     {
         String text = source.substring(start, current);
         tokens.add(new Token(type, text, literal, line));
+        System.out.println("Adding token\n\tType: " + type + "\n\tText: " + text); 
     }
 }

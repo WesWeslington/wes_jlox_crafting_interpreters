@@ -1,0 +1,13 @@
+print "Hello world";
+
+if(1 > 0){
+    print "1 is greater than 0, the correct message was printed";
+}else{
+    print "error - wrong message printed, 1 > 0 should be true";
+}
+
+// This is a comment
+
+/* This 
+Is a Multiline
+comment */
