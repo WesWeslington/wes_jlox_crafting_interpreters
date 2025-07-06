@@ -1,6 +1,6 @@
 // These are the kinds of tokens we support in jlox :-)
 
-// package jlox;
+package lox;
 
 enum TokenType{
     // Single Char
