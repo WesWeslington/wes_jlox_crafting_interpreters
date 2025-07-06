@@ -43,6 +43,8 @@ class Scanner
 
     List<Token> scanTokens()
     {
+        System.out.println(" ==== Entering the Scanner ==== ");
+
         while(!isAtEnd())
         {
             start = current;
@@ -167,6 +169,8 @@ class Scanner
 
             while(isDigit(peek())) advance();
         }
+
+        addToken(TokenType.NUMBER, Double.parseDouble(source.substring(start, current)));
     }
 
     private boolean match(char expected)
