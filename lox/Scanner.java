@@ -76,7 +76,16 @@ class Scanner
             case '<': addToken(match('=') ? TokenType.LESS_EQUAL: TokenType.LESS); break;
             case '>': addToken(match('=') ? TokenType.GREATER_EQUAL: TokenType.GREATER); break;
 
-            case '/': comment(); break;
+            case '/': 
+            if(peek() =='*' || peek() == '/')
+            {
+                comment(); 
+            }
+            else
+            {
+                addToken(TokenType.SLASH);
+            }
+            break;
             case ' ':
             case '\r':
             case '\t':
