@@ -81,6 +81,7 @@ public class Interpreter implements Expr.Visitor<Object>
                 checkNumberOperand(expr.operator, right);
                 return (double)left - (double)right;
             case SLASH:
+                checkDividedByZero(expr.operator, (double)right);
                 checkNumberOperands(expr.operator, left, right);
                 return (double)left / (double)right;
             case STAR:
@@ -107,6 +108,14 @@ public class Interpreter implements Expr.Visitor<Object>
     {
         if (operand instanceof Double) return;
         throw new RuntimeError(operator, "Operand must be a number");
+    }
+
+    private void checkDividedByZero(Token operator, double right)
+    {
+        if((int)right == 0)
+        {
+            throw new RuntimeError(operator, "Cannot divide by 0");
+        }
     }
 
     private void checkNumberOperands(Token operator, Object left, Object right)
