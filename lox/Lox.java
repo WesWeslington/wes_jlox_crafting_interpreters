@@ -64,8 +64,8 @@ public class Lox {
         // Stop if there was a syntax error
         if(hadError) { return; }
 
-        interpreter.interpret(expression);
-        // System.out.println(new AstPrinter().print(expression)); // Prints abstract syntax tree
+        // interpreter.interpret(expression);
+        System.out.println(new AstPrinter().print(expression)); // Prints abstract syntax tree
     }
 
     static void error(int line, String message)

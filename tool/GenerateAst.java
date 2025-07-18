@@ -13,6 +13,7 @@ public class GenerateAst {
         }
         String outputDir = args[0];
         defineAst(outputDir, "Expr", Arrays.asList(
+            "Ternary  : Expr expr, Expr truthy, Expr falsey",
             "Binary   : Expr left, Token operator, Expr right",
             "Grouping : Expr expression",
             "Literal  : Object value",
@@ -30,7 +31,7 @@ public class GenerateAst {
         writer.println();
         writer.println("import java.util.List;");
         writer.println();
-        writer.println("abstract class " + baseName + " {");
+        writer.println("abstract class " + baseName + "\n{");
 
         defineVisitor(writer, baseName, types);
 
@@ -42,7 +43,7 @@ public class GenerateAst {
         }
 
         writer.println();
-        writer.println("    abstract <R> R accept(Visitor<R> visitor);");
+        writer.println("\t\tabstract <R> R accept(Visitor<R> visitor);");
 
         writer.println("}");
         writer.close();
@@ -50,46 +51,48 @@ public class GenerateAst {
 
     private static void defineVisitor(PrintWriter writer, String baseName, List<String> types)
     {
-        writer.println("    interface Visitor<R> {");
+        writer.println("    interface Visitor<R>\n\t{");
 
         for(String type : types)
         {
             String typeName = type.split(":")[0].trim();
-            writer.println("    R visit" + typeName + baseName + "(" + typeName + " " + baseName.toLowerCase() + ");");
+            writer.println("\t\tR visit" + typeName + baseName + "(" + typeName + " " + baseName.toLowerCase() + ");");
         }
 
-        writer.println("    }");
+        writer.println("\t}");
+        writer.println("");
     }
 
     private static void defineType(PrintWriter writer, String baseName, String className, String fieldList)
     {
-        writer.println("    static class " + className + " extends " + baseName + " {");
+        writer.println("\tstatic class " + className + " extends " + baseName + " \n\t{");
         
         // Constructor
-        writer.println("    " + className + "(" + fieldList + ") {");
+        writer.println("\t\t" + className + "(" + fieldList + ") \n\t\t{");
 
         // Store parameters in fields
         String[] fields = fieldList.split(", ");
         for(String field : fields)
         {
             String name = field.split(" ")[1];
-            writer.println("        this." + name + " = " + name + ";");
+            writer.println("            this." + name + " = " + name + ";");
         }
 
-        writer.println("    }");
+        writer.println("\t\t}");
 
         writer.println();
-        writer.println("    @Override");
-        writer.println("    <R> R accept(Visitor<R> visitor) {");
-        writer.println("    return visitor.visit" + className + baseName + "(this);");
-        writer.println("    }");
+        writer.println("\t\t@Override");
+        writer.println("\t\t<R> R accept(Visitor<R> visitor) \n\t\t{");
+        writer.println("\t\t\treturn visitor.visit" + className + baseName + "(this);");
+        writer.println("\t\t}");
 
         // Fields
         writer.println();
         for(String field : fields){
-            writer.println("    final " + field + ";");
+            writer.println("    \tfinal " + field + ";");
         }
 
-        writer.println("    }");
+        writer.println("\t}");
+        writer.println("");
     }
 }
