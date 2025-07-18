@@ -101,7 +101,22 @@ public class Interpreter implements Expr.Visitor<Object>
 
         // Unreachable
         return null;
-    } 
+    }
+
+    @Override
+    public Object visitTernaryExpr(Expr.Ternary expr)
+    {
+        if((boolean)evaluate(expr.expr))
+        {
+            interpret(expr.truthy);
+            return expr.truthy;
+        }
+        else
+        {
+            interpret(expr.falsey);
+            return expr.falsey;
+        }
+    }
 
     @Override
     public Object visitTernaryExpr(Expr.Ternary expr)
