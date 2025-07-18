@@ -103,6 +103,21 @@ public class Interpreter implements Expr.Visitor<Object>
         return null;
     } 
 
+    @Override
+    public Object visitTernaryExpr(Expr.Ternary expr)
+    {
+        if((boolean)evaluate(expr.expr))
+        {
+            interpret(expr.truthy);
+            return (Object)expr.truthy;
+        } 
+        else
+        {
+            interpret(expr.falsey);
+            return (Object)expr.falsey;
+        }
+    }
+
     private void checkNumberOperand(Token operator, Object operand)
     {
         if (operand instanceof Double) return;

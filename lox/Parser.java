@@ -27,7 +27,21 @@ public class Parser
 
     private Expr expression()
     {
-        return equality();
+        return ternary();
+    }
+
+    private Expr ternary()
+    {
+        Expr expr = equality();
+        while(match(TokenType.QUERY))
+        {
+            Expr truthy = ternary();
+            consume(TokenType.COLON, "Expected : after the truthy part of ternary expression");
+            Expr falsey = ternary();
+            expr = new Expr.Ternary(expr, truthy, falsey);
+        }
+
+        return expr;
     }
 
     private Expr equality()
