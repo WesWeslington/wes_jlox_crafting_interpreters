@@ -95,6 +95,9 @@ class Scanner
 
             case '"':string(); break;
 
+            case '?': addToken(TokenType.QUERY); break;
+            case ':': addToken(TokenType.COLON); break;
+
             default:
             if(isDigit(c))
             {

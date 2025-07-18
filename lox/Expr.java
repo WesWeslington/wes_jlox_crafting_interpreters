@@ -3,6 +3,7 @@ package lox;
 abstract class Expr {
     interface Visitor<R> {
     R visitBinaryExpr(Binary expr);
+	R visitTernaryExpr(Ternary expr);
     R visitGroupingExpr(Grouping expr);
     R visitLiteralExpr(Literal expr);
     R visitUnaryExpr(Unary expr);
@@ -24,6 +25,24 @@ abstract class Expr {
         final Expr left;
         final Token operator;
         final Expr right;
+    }
+
+	static class Ternary extends Expr {
+        Ternary(Expr expr, Expr truthy, Expr falsey) {
+            this.expr = expr;
+            this.truthy = truthy;
+            this.falsey = falsey;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) 
+        {
+            return visitor.visitTernaryExpr(this);
+        }
+
+        final Expr expr;
+        final Expr truthy;
+        final Expr falsey;
     }
 
     static class Grouping extends Expr 
