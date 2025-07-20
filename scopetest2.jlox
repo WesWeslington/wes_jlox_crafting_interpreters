@@ -1,0 +1,14 @@
+var a = 1;
+{
+    var a = a + 2;
+    print a;
+}
+
+// Before executing this, I expected 'a == 3', since in this variable definition, if we can't find a in the environment, we search the enclosing environment recursively
+// This ended up being correct
+
+//If I were to print a in a global scope, I would expect a == 1
+
+print a;
+
+// Yep this is correct, since we are using the 'Global' scoped environment for a
