@@ -42,6 +42,13 @@ public class Lox {
         {
             System.out.print("> ");
             String line = reader.readLine();
+
+            // Handle single expression evaluation by turning it into an expression ONLY for REPL
+            if(!line.endsWith(";"))
+            {
+                line = "print " + line + ";";
+            }
+
             if(line == null) break;
             run(line);
             hadError = false;
