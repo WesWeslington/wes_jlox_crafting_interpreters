@@ -111,6 +111,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>
         {
             value = evaluate(stmt.initializer);
         }
+        else if(Lox.disallowUninitializedVarDef)
+        {
+            throw new RuntimeError(stmt.name, "Attempting to define an uninitialized variable which is no longer allowed");
+        }
 
         environment.define(stmt.name.lexeme, value);
         return null;

@@ -13,6 +13,9 @@ public class Lox {
     static boolean hadError = false;
     static boolean hadRuntimeError = false;
 
+    // Flags
+    static boolean disallowUninitializedVarDef = false; // makes it so 'var Foo;' is illegal and a runtime error
+
     public static void main(String[] args) throws IOException {
         if(args.length > 1) {
             System.out.println("Usage: jlox [script]");
