@@ -1,0 +1,14 @@
+for(var Index = 0; Index < 10; Index = Index + 1)
+{
+    print Index;
+}
+
+var WhileIndex = 0;
+
+while(WhileIndex < 10)
+{
+    WhileIndex = WhileIndex + 1;
+    print "WhileIndex = " + WhileIndex;
+}
+
+print WhileIndex;
