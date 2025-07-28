@@ -1,0 +1,44 @@
+// NOTE: This test was written prior to there being functions, or classes
+var exitCode = 0;
+var TestName = "Loop";
+
+print "========== Starting " + TestName + " Tests =========="; 
+
+// TEST - For Loop + Break
+{
+    var LastIndex = -1;
+    var MaxIndex = 3;
+    for(var Index = 0; Index < 10; Index = Index + 1)
+    {
+        LastIndex = Index;
+
+        if(Index == MaxIndex)
+        {
+            break;
+        }
+    }
+    var ResultMessage = LastIndex == 3 ? "[SUCCESS]" : "[FAILED]";
+    var ExpectedResult = MaxIndex;
+    print ResultMessage + " For Loop + Break - Expected: " + ExpectedResult + " - Actual: " + LastIndex;
+}
+
+// TEST - While Loop Break
+{
+    var WhileIndex = 0;
+    var MaxIndex = 3;
+    while(WhileIndex < 10)
+    {
+        WhileIndex = WhileIndex + 1;
+
+        if(WhileIndex > MaxIndex)
+        {
+            break;
+        }
+    }
+
+    var ResultMessage = WhileIndex == 4 ? "[SUCCESS]" : "[FAILED]";
+    var ExpectedResult = MaxIndex;
+    print ResultMessage + " While Loop Break - Expected: " + ExpectedResult + " - Actual: " + WhileIndex;
+}
+
+print "Closed with exit code: " + exitCode;

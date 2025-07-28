@@ -80,7 +80,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>
 
     private void execute(Stmt stmt)
     {
-        stmt.accept(this);
+        if(!didBreak)
+            stmt.accept(this);        
     }
 
     void executeBlock(List<Stmt> statements, Environment environment)
@@ -92,13 +93,25 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>
 
             for(Stmt statement : statements)
             {
-                execute(statement);
+                if(!didBreak)
+                    execute(statement);
             }
         }
         finally
         {
             this.environment = previous;
         }
+    }
+    
+    boolean didBreak = false;
+    boolean enteredLoop = false;
+
+    @Override
+    public Void visitBreakStmt(Stmt.Break expr)
+    {
+        if(!enteredLoop){ throw new RuntimeError(expr.breakToken, "Can't break outside a loop"); }
+        didBreak = true;
+        return null;
     }
 
     @Override
@@ -125,6 +138,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>
         {
             execute(stmt.elseBranch);
         }
+
         return null;
     }
 
@@ -156,10 +170,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>
     @Override
     public Void visitWhileStmt(Stmt.While stmt)
     {
-        while(isTruthy(evaluate(stmt.condition)))
+        enteredLoop = true;
+        while(isTruthy(evaluate(stmt.condition)) && !didBreak)
         {
             execute(stmt.body);
         }
+        didBreak = false;
+        enteredLoop = false;
 
         return null;
     }
