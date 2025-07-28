@@ -43,7 +43,7 @@ class Scanner
 
     List<Token> scanTokens()
     {
-        System.out.println(" ==== Entering the Scanner ==== ");
+        // System.out.println(" ==== Entering the Scanner ==== ");
 
         while(!isAtEnd())
         {
@@ -221,6 +221,6 @@ class Scanner
     {
         String text = source.substring(start, current);
         tokens.add(new Token(type, text, literal, line));
-        System.out.println("Adding token\n\tType: " + type + "\n\tText: " + text); 
+        // System.out.println("Adding token\n\tType: " + type + "\n\tText: " + text); 
     }
 }

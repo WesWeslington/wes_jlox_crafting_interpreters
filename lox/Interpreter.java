@@ -102,7 +102,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>
             this.environment = previous;
         }
     }
-    
+
     boolean didBreak = false;
     boolean enteredLoop = false;
 
@@ -158,7 +158,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>
         {
             value = evaluate(stmt.initializer);
         }
-        else if(Lox.disallowUninitializedVarDef)
+        else if(!Lox.allowUninitializedVarDef)
         {
             throw new RuntimeError(stmt.name, "Attempting to define an uninitialized variable which is no longer allowed");
         }

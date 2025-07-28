@@ -2,6 +2,7 @@
 var exitCode = 0;
 var TestName = "Loop";
 
+print "";
 print "========== Starting " + TestName + " Tests =========="; 
 
 // TEST - For Loop + Break
@@ -36,9 +37,10 @@ print "========== Starting " + TestName + " Tests ==========";
         }
     }
 
-    var ResultMessage = WhileIndex == 4 ? "[SUCCESS]" : "[FAILED]";
-    var ExpectedResult = MaxIndex;
+    var ExpectedResult = MaxIndex + 1;
+    var ResultMessage = WhileIndex == ExpectedResult ? "[SUCCESS]" : "[FAILED]";
     print ResultMessage + " While Loop Break - Expected: " + ExpectedResult + " - Actual: " + WhileIndex;
 }
 
 print "Closed with exit code: " + exitCode;
+print "======= Ending " + TestName + " Tests =======";

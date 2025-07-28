@@ -1,11 +1,13 @@
 package lox;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
 public class Lox {
@@ -14,17 +16,66 @@ public class Lox {
     static boolean hadRuntimeError = false;
 
     // Flags
-    static boolean disallowUninitializedVarDef = false; // makes it so 'var Foo;' is illegal and a runtime error
+    static boolean allowUninitializedVarDef = true; // makes it so 'var Foo;' is illegal and a runtime error
 
     public static void main(String[] args) throws IOException {
-        if(args.length > 1) {
-            System.out.println("Usage: jlox [script]");
-            System.exit(64);
-        }else if(args.length == 1)
+        ParseAllCommands(args);
+
+    }
+
+    private static void ParseAllCommands(String[] args) throws IOException
+    {
+        // Custom command line
+        List<String> Commands = Arrays.asList
+        (
+            "RunAllTestsPath", "REPL", "RunFile"
+        );
+
+        for(String Command : Commands)
         {
-            runFile(args[0]);
-        }else{
-            runPrompt();
+            for(String arg : args)
+            {
+                if(arg.contains(Command))
+                {
+                    String ArgValue = arg.split(Command +"=")[1];
+                    RunArgsInit(Command, ArgValue);
+                }
+            }
+        }
+    }
+
+    private static void RunArgsInit(String Command, String ArgValue) throws IOException
+    {
+
+        switch(Command)
+        {
+            case "RunAllTestsPath":
+                RunAllTests(ArgValue);
+            break;
+            case "RunTest":
+                runFile(ArgValue);
+            break;
+            case "REPL":
+                runPrompt();
+            break;
+            default:
+            break;
+        }
+    }
+
+    private static void RunAllTests(String PathToTestsDir) throws IOException
+    {
+        System.out.println("Running all tests using root folder: " + PathToTestsDir);
+
+        File TestsRootFolder = new File(PathToTestsDir);
+        File[] TestFiles = TestsRootFolder.listFiles();
+
+        for(File TestFile : TestFiles)
+        {
+            if(TestFile.isFile() && TestFile.getAbsolutePath().endsWith(".jlox"))
+            {
+                runFile(TestFile.getAbsolutePath());
+            }
         }
     }
 
@@ -62,11 +113,11 @@ public class Lox {
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
 
-        System.out.println(" ==== Entering the parser ==== ");
-        for(Token token : tokens)
-        {
-            System.out.println(token.type);
-        }
+        // System.out.println(" ==== Entering the parser ==== ");
+        // for(Token token : tokens)
+        // {
+        //     System.out.println(token.type);
+        // }
 
         Parser parser = new Parser(tokens);
         List<Stmt> statements = parser.parse();
