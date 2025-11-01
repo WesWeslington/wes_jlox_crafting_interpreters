@@ -2,6 +2,8 @@ package lox;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import lox.nativelib.NativeLib;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>
 {
@@ -10,73 +12,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>
 
     public Interpreter() 
     {
-        globals.define("clock", new LoxCallable()
+        for(Map.Entry<String, LoxCallable> NativeFunction : NativeLib.NativeFunctions().entrySet())
         {
-            @Override
-            public int arity(){ return 0;}
-
-            @Override
-            public Object call(Interpreter interpreter, List<Object> arguments)
-            {   
-                // Function body
-                return (double)System.currentTimeMillis() / 1000.0;
-            }
-
-            @Override
-            public String toString() {return "<native clock>";}
-        });
-
-        globals.define("sleep", new LoxCallable()
-        {
-            @Override
-            public int arity(){ return 1;}
-
-            @Override
-            public Object call(Interpreter interpreter, List<Object> arguments)
-            {   
-                double endTime = 0.0;
-                try 
-                {
-                    endTime = (double)System.currentTimeMillis() + (double)arguments.get(0) * 1000.0;
-                } 
-                catch (Exception e) 
-                {
-                    throw new RuntimeException("Issue with parameters in native sleep function: ", e);
-                }
-
-                while( (double)System.currentTimeMillis() < endTime)
-                {
-
-                }
-                // Function body
-                return null;
-            }
-
-            @Override
-            public String toString() {return "<native sleep>";}
-        });
-
-        globals.define("round", new LoxCallable()
-        {
-            @Override
-            public int arity(){ return 1;} // TODO: make 2 arguments, the 2nd arg should be for decimal places (for now, rounding to nearest int is fine)
-
-            @Override
-            public Object call(Interpreter interpreter, List<Object> arguments)
-            {   
-                try 
-                {
-                    return Math.round((double)arguments.get(0));
-                } 
-                catch (Exception e) 
-                {
-                    throw new RuntimeException("Issue with parameters in native round function: ", e);
-                }
-            }
-
-            @Override
-            public String toString() {return "<native round>";}
-        });
+            globals.define(NativeFunction.getKey(), NativeFunction.getValue());
+        }
     }
 
     @Override
