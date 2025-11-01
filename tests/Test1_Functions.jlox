@@ -1,0 +1,105 @@
+var exitCode = 0;
+var TestName = "Function";
+var startTime = clock();
+
+print "";
+print "========== Starting " + TestName + " Tests =========="; 
+
+// I am going to hold off from making a full blown test framework until I have classes
+fun CheckEqual(val1, val2, message)
+{
+    var isEqual = val1 == val2;
+    var resultMessage = isEqual ? "Success" : "Fail";
+    print "[" + resultMessage + "] " + message;
+    return isEqual;
+}
+
+fun CheckNotEqual(val1, val2, message)
+{
+    var isNotEqual = val1 != val2;
+    var resultMessage = isNotEqual ? "Success" : "Fail";
+    print "[" + resultMessage + "] " + message;
+    return isNotEqual;
+}
+
+fun HelloWorld(name)
+{
+    return "Hello World " + name;
+}
+
+fun Sleep(sleepAmount)
+{
+    while(clock() - startTime <= sleepAmount){}
+}
+
+// Example from the book
+fun fib(n)
+{
+    if (n <= 1) return n;
+    return fib(n - 2) + fib(n - 1);
+}
+
+fun RunFibTest()
+{
+    var ReturnValue;
+
+    for(var i = 0; i < 20; i = i + 1)
+    {
+        ReturnValue = i;
+    }
+
+    return ReturnValue;
+}
+// End of example from the book
+
+// Count example from book
+
+fun makeCounter()
+{
+    var i = 0;
+    fun count()
+    {
+        i = i + 1;
+        return i;
+    }
+
+    return count;
+}
+
+var counter = makeCounter();
+counter();
+counter();
+
+// End Count example from book
+
+// lox sleep test
+var loxSleepTestDuration = 0.25;
+var sleepTestStartTime = clock();
+Sleep(loxSleepTestDuration);
+var sleepTestDuration = clock() - sleepTestStartTime;
+
+// native sleep test
+var nativeSleepTestDuration = 0.25;
+var nativeSleepTestStartTime = clock();
+sleep(nativeSleepTestDuration);
+var nativeSleepTestActualDuration = clock() - nativeSleepTestStartTime;
+
+var totalRuntime = clock() - startTime;
+
+print "Total Runtime = " + totalRuntime + " seconds";
+
+/////////////////////////////
+// Asserts
+/////////////////////////////
+
+// Testing CheckEqual
+CheckEqual(1, 1, "CheckEqual integer test");
+CheckEqual(true, true, "CheckEqual boolean test");
+CheckEqual("test", "test", "CheckEqual string test");
+CheckNotEqual(false, true, "CheckNotEqual test");
+
+CheckEqual(counter(), 3, "Local Functions Test");
+CheckEqual("Hello World Gazpacho", HelloWorld("Gazpacho"), "Single parameter test");
+
+CheckEqual(round(loxSleepTestDuration), round(sleepTestDuration), "lox Sleep test");
+CheckEqual(round(nativeSleepTestDuration), round(nativeSleepTestActualDuration), "native sleep test");
