@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lox.Interpreter;
+import lox.Lox;
 import lox.LoxCallable;
+import lox.Resolver;
 
 public class NativeLib 
 {
@@ -60,6 +62,7 @@ public class NativeLib
 
         NativeFunctionMapRet.put("round", new LoxCallable()
         {
+
             @Override
             public int arity(){ return 1;} // TODO: make 2 arguments, the 2nd arg should be for decimal places (for now, rounding to nearest int is fine)
 
@@ -79,7 +82,58 @@ public class NativeLib
             @Override
             public String toString() {return "<native round>";}
         });
+        
+        NativeFunctionMapRet.putAll(TestLibrary());
 
         return NativeFunctionMapRet;
     }
+
+    public static Map<String, LoxCallable> TestLibrary()
+    {
+        Map<String, LoxCallable> NativeTestFunctionMapRet = new HashMap<>();
+
+        NativeTestFunctionMapRet.put("toggleResolverTests", new LoxCallable()
+        {
+
+            @Override
+            public int arity(){ return 1;} 
+
+            @Override
+            public Object call(Interpreter interpreter, List<Object> arguments)
+            {   
+                try 
+                {
+                    Lox.resolverTestMode = ((boolean)arguments.get(0));
+                    System.out.println("[Resolver Testmode: " + Lox.resolverTestMode +"]");
+                    return null;
+                } 
+                catch (Exception e) 
+                {
+                    throw new RuntimeException("Issue with parameters in native round function: ", e);
+                }
+            }
+
+            @Override
+            public String toString() {return "<native toggleResolverTests>";}
+        });
+
+        NativeTestFunctionMapRet.put("getResolverErrorCount", new LoxCallable()
+        {
+            @Override
+            public int arity(){ return 0;}
+
+            @Override
+            public Object call(Interpreter interpreter, List<Object> arguments)
+            {   
+                // Function body
+                return (double)Resolver.testAssertCount;
+            }
+
+            @Override
+            public String toString() {return "<native getResolverErrorCount>";}  
+        });
+
+        return NativeTestFunctionMapRet;
+    }
 }
+   

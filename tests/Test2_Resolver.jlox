@@ -1,0 +1,22 @@
+var exitCode = 0;
+var TestName = "Resolver / Static Analysis";
+var startTime = clock();
+
+print "";
+print "========== Starting " + TestName + " Tests =========="; 
+
+var a = 1;
+
+{    
+    // This is not allowed
+    var a = a;
+    CheckEqual(1, getResolverErrorCount(), "Successfully not able to initialize a local variable to itself");
+}
+
+toggleResolverTests(false);
+
+var totalRuntime = clock() - startTime;
+
+print "Total Runtime = " + totalRuntime + " seconds";
+
+// Hacky but we're using the asserts from Test1_Functions, this test will only run when all tests run in order

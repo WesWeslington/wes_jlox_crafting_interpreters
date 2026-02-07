@@ -10,16 +10,32 @@ fun CheckEqual(val1, val2, message)
 {
     var isEqual = val1 == val2;
     var resultMessage = isEqual ? "Success" : "Fail";
-    print "[" + resultMessage + "] " + message;
+    resultMessage = "[" + resultMessage + "] " + message;
+
+    print resultMessage;
+
+    if(!isEqual)
+    {
+        print "    " + val1 + " not equal " + val2;
+    }
+
     return isEqual;
 }
 
 fun CheckNotEqual(val1, val2, message)
 {
-    var isNotEqual = val1 != val2;
-    var resultMessage = isNotEqual ? "Success" : "Fail";
+    var isEqual = val1 == val2;
+    var resultMessage = isEqual ? "Fail" : "Success";
+
     print "[" + resultMessage + "] " + message;
-    return isNotEqual;
+
+    if(isEqual)
+    {
+        print "    " + val1 + " equals " + val2;
+    }
+
+
+    return isEqual;
 }
 
 fun HelloWorld(name)
@@ -103,3 +119,5 @@ CheckEqual("Hello World Gazpacho", HelloWorld("Gazpacho"), "Single parameter tes
 
 CheckEqual(round(loxSleepTestDuration), round(sleepTestDuration), "lox Sleep test");
 CheckEqual(round(nativeSleepTestDuration), round(nativeSleepTestActualDuration), "native sleep test");
+
+toggleResolverTests(true);

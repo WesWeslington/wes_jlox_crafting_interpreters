@@ -14,6 +14,7 @@ public class Lox {
     private static final Interpreter interpreter = new Interpreter();
     static boolean hadError = false;
     static boolean hadRuntimeError = false;
+    public static boolean resolverTestMode = false;
 
     // Flags
     static boolean allowUninitializedVarDef = true; // makes it so 'var Foo;' is illegal and a runtime error
@@ -121,6 +122,11 @@ public class Lox {
 
         Parser parser = new Parser(tokens);
         List<Stmt> statements = parser.parse();
+
+        Resolver resolver = new Resolver(interpreter);
+        resolver.resolve(statements);
+
+        if(hadError) return;
 
         // Stop if there was a syntax error
         if(hadError) { return; }
