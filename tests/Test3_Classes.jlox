@@ -1,0 +1,47 @@
+var exitCode = 0;
+var TestName = "Classes";
+var startTime = clock();
+
+print "";
+print "========== Starting " + TestName + " Tests =========="; 
+
+class AnObject
+{
+    foo()
+    {
+        return "ChickenBurger";
+    }
+}
+
+CheckEqual(AnObject().foo(), "ChickenBurger", "Checking that methods return expected return string");
+
+class Cake
+{
+    taste()
+    {
+        var adjective = "yum";
+        print "The " + this.flavor + " cake is " + adjective + "!";
+    }
+}
+
+var cake = Cake();
+cake.flavor = "Strawbry";
+cake.taste();
+
+class Restaurant
+{
+    init(Name)
+    {
+        print "Init called, innit!";
+        this.Name = Name;
+    }
+}
+
+var NewRestaurant = Restaurant("Bojangles");
+CheckEqual("Bojangles", NewRestaurant.Name, "Checking that initializers work and we can get properties from them");
+
+var totalRuntime = clock() - startTime;
+
+print "Total Runtime = " + totalRuntime + " seconds";
+
+// Hacky but we're using the asserts from Test1_Functions, this test will only run when all tests run in order

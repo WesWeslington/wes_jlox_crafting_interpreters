@@ -35,6 +35,7 @@ public class Parser
     {
         try
         {
+            if(match(TokenType.CLASS)) return classDecleration();
             if(match(TokenType.FUN)) return function("function");
             if(match(TokenType.VAR)) return varDeclaration();
             return statement();
@@ -43,6 +44,22 @@ public class Parser
             synchronize();
             return null;
         }
+    }
+
+    private Stmt classDecleration()
+    {
+        Token name = consume(TokenType.IDENTIFIER, "Expect class name.");
+        consume(TokenType.LEFT_BRACE, "Expect '{' before class body.");
+
+        List<Stmt.Function> methods = new ArrayList<>();
+        while (!check(TokenType.RIGHT_BRACE) && !isAtEnd())
+        {
+            methods.add(function("method"));
+        }
+
+        consume(TokenType.RIGHT_BRACE, "Expect '}' after class body.");
+
+        return new Stmt.Class(name, methods);
     }
 
     private Expr ternary()
@@ -248,6 +265,11 @@ public class Parser
                 Token name = ((Expr.Variable)expr).name;
                 return new Expr.Assign(name, value);
             }
+            else if(expr instanceof Expr.Get)
+            {
+                Expr.Get get = (Expr.Get)expr;
+                return new Expr.Set(get.object, get.name, value);
+            }
 
             error(equals, "Invalid assignment target.");
         }
@@ -357,6 +379,11 @@ public class Parser
             {
                 expr = finishCall(expr);
             }
+            else if (match(TokenType.DOT)) 
+            {
+                Token name = consume(TokenType.IDENTIFIER, "Expect property name after '.'.");
+                expr = new Expr.Get(expr, name);    
+            }
             else
             {
                 break;
@@ -401,6 +428,8 @@ public class Parser
             consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.");
             return new Expr.Grouping(expr);
         }
+
+        if(match(TokenType.THIS)) return new Expr.This(previous());
 
         if(match(TokenType.IDENTIFIER))
         {
