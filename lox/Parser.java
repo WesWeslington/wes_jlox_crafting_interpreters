@@ -49,6 +49,14 @@ public class Parser
     private Stmt classDecleration()
     {
         Token name = consume(TokenType.IDENTIFIER, "Expect class name.");
+
+        Expr.Variable superClass = null;
+        if(match(TokenType.LESS))
+        {
+            consume(TokenType.IDENTIFIER, "Expect superclass name.");
+            superClass = new Expr.Variable(previous());
+        }
+
         consume(TokenType.LEFT_BRACE, "Expect '{' before class body.");
 
         List<Stmt.Function> methods = new ArrayList<>();
@@ -59,7 +67,7 @@ public class Parser
 
         consume(TokenType.RIGHT_BRACE, "Expect '}' after class body.");
 
-        return new Stmt.Class(name, methods);
+        return new Stmt.Class(name, superClass, methods);
     }
 
     private Expr ternary()
@@ -420,6 +428,14 @@ public class Parser
         if(match(TokenType.NUMBER, TokenType.STRING))
         {
             return new Expr.Literal(previous().literal);
+        }
+
+        if(match(TokenType.SUPER))
+        {
+            Token keyword = previous();
+            consume(TokenType.DOT, "Expect '.' after 'super'.");
+            Token method = consume(TokenType.IDENTIFIER, "Expect superClass method name.");
+            return new Expr.Super(keyword, method);
         }
 
         if(match(TokenType.LEFT_PAREN))

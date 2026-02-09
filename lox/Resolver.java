@@ -20,6 +20,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>
     private enum ClassType 
     {
         NONE,
+        SUBCLASS,
         CLASS
     }
 
@@ -60,6 +61,24 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>
 
         declare(stmt.name);
         define(stmt.name);
+        if(stmt.superClass != null && 
+            stmt.name.lexeme.equals(stmt.superClass.name.lexeme))
+        {
+            Lox.error(stmt.superClass.name, "A class can't inherit from itself, silly!");
+        }
+
+
+        if(stmt.superClass != null)
+        {
+            currentClass = ClassType.SUBCLASS;
+            resolve(stmt.superClass);
+        }
+
+        if(stmt.superClass != null)
+        {
+            beginScope();
+            scopes.peek().put("super", true);
+        }
 
         beginScope();
         scopes.peek().put("this", true);
@@ -75,6 +94,9 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>
         }
 
         endScope();
+
+        if(stmt.superClass != null) endScope();
+
         currentClass = enclosingClass;
 
         return null;
@@ -186,6 +208,22 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>
     {
         resolve(expr.value);
         resolve(expr.object);
+        return null;
+    }
+
+    @Override
+    public Void visitSuperExpr(Expr.Super expr)
+    {
+        if(currentClass == ClassType.NONE)
+        {
+            Lox.error(expr.keyword, "Can't use 'super' outside of a class");
+        }
+        else if(currentClass != ClassType.SUBCLASS)
+        {
+            Lox.error(expr.keyword, "Can't use 'super' in a class waith no superclass.");
+        }
+
+        resolveLocal(expr, expr.keyword);
         return null;
     }
 

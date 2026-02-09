@@ -1,0 +1,47 @@
+var exitCode = 0;
+var TestName = "Inheritance";
+var startTime = clock();
+
+print "";
+print "========== Starting " + TestName + " Tests =========="; 
+
+class Burger
+{
+    eat()
+    {
+        print "I like burger";
+    }
+
+    burgerType()
+    {
+        return "Regular";
+    }
+}
+
+class ChickenBurger < Burger  {}
+ChickenBurger().eat();
+
+class CheeseBurger < Burger
+{
+    eat()
+    {
+        print "I like chemse burger";
+    }
+
+    burgerType(parentType)
+    {
+        if(parentType)
+        {
+            return super.burgerType();
+        }
+        return "Cheese";
+    }
+}
+
+CheckEqual(CheeseBurger().burgerType(false), "Cheese", "Child class is able to return its override method");
+CheckEqual(CheeseBurger().burgerType(true), "Regular", "Child class is able to return its super method");
+
+var totalRuntime = clock() - startTime;
+
+print "Total Runtime = " + totalRuntime + " seconds";
+
